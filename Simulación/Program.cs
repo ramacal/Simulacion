@@ -9,15 +9,16 @@ namespace Simulación
         static StreamWriter Escribir;
 
         static void Main(string[] args)
-        {
+        {   //INICIO - INICIALIZACION VARIABLES
             Escribir = new StreamWriter("Resultados.txt", true);
             Console.WriteLine("Trabajo Practico N°6");
             Console.WriteLine(("").PadRight(20, '-'));
+            int d1;
+            //FIN - INICIALIZACION VARIABLES
 
             //INICIO - INPUT VARIABLES EXOGENAS
             Console.WriteLine("Variables Exogenas");
             Console.Write("Ingrese Dato 1: ");
-            int d1;
             string userInput = Console.ReadLine();
             while (!Int32.TryParse(userInput, out d1))
             {
@@ -29,7 +30,6 @@ namespace Simulación
             d1 = Convert.ToInt32(userInput);
             //FIN - INPUT VARIABLES EXOGENAS
 
-            Escribir = new StreamWriter("Archivo_Agenda.txt", true);
             Escribir.WriteLine(d1);
             //INICIO - INPUT VARIABLES ENDOGENAS
             //FIN - INPUT VARIABLES EXOGENAS
