@@ -26,6 +26,17 @@ namespace Simulación
             Console.WriteLine(("").PadRight(20, '-'));
             //FIN - INICIALIZACION VARIABLES
 
+
+            //INICIO - DECLARACION DE FUNCIONES
+
+            // FDP - Intervalo entre arribos
+            double fdpIA = new Fdp().CalcularFdpIA(0,1073);
+            
+            // FDP - Intervalo entre arribos
+
+
+            //FIN - DECLARACION DE FUNCIONES FDP
+
             //INICIO - INPUT VARIABLES EXOGENAS
             Console.WriteLine("Variables Exogenas");
             Console.Write("Ingrese N (cant puestos SAP):");
