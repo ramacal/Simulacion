@@ -20,6 +20,15 @@ namespace Simulación
             int NSsap = 0;
             int NSmdsti = 0; 
             double HV = 999999;
+            double stllMdsti = 0;
+            double stllSap = 0;
+            double stsMdsti = 0;
+            double stsSap = 0;
+            double staMdsti = 0;
+            double staSap = 0;
+            int NTSap = 0;
+            int NTMdsti = 0;
+            int cantArrep = 0;
 
             List<PuestoSap> puestosSap = new List<PuestoSap>(); 
             List<PuestoMdsti> puestosMdsti = new List<PuestoMdsti>();
@@ -28,16 +37,6 @@ namespace Simulación
             Console.WriteLine("Trabajo Practico N°6");
             Console.WriteLine(("").PadRight(20, '-'));
             //FIN - INICIALIZACION VARIABLES
-
-            //INICIO - DECLARACION DE FUNCIONES
-
-            // FDP - Intervalo entre arribos
-            //double fdpIA = new Fdp().CalcularFdpIA(0,1073);
-            
-            // FDP - Intervalo entre arribos
-
-
-            //FIN - DECLARACION DE FUNCIONES FDP
 
             //INICIO - INPUT VARIABLES EXOGENAS
             Console.WriteLine("Variables Exogenas");
@@ -95,7 +94,7 @@ namespace Simulación
                     //Llegada
                     tiempo = tpll;
 
-                    double IA = new Fdp().CalcularFdpIA(0,1073);
+                    double IA = new Fdp().CalcularFdpIA(0,1000);
                     tpll = tiempo + IA;
                     llegadas.Add(new Llegada(tpll));
                     llegadas.Remove(llegadaConMenorTiempo);
@@ -103,36 +102,40 @@ namespace Simulación
                     Random random = new Random();
                     double r = random.NextDouble();
 
-                    if(r <= 0.1){
-                        NSsap++;
+                    double r2 = random.NextDouble(); //para el arrep (10%)              
+                    if(r2 >= 0.1){
+                        if(r <= 0.1){
+                            NSsap++;
+                            NTSap++;
+                            stllSap = stllSap + tiempo;
 
-                        if(NSsap <= cantPuestosSap){
-                            PuestoSap puestoLibre = puestosSap.Find(i => i.getTiempoSalida() == HV);
-                            //double TAsap = new Fdp().CalcularFdpTASap(31,966);
-                            //puestoLibre.setTiempoSalida(tiempo + TAsap);
+                            if(NSsap <= cantPuestosSap){
+                                PuestoSap puestoLibre = puestosSap.Find(i => i.getTiempoSalida() == HV);
+                                double TAsap = new Fdp().CalcularFdpTASAP(30,900);
+                                puestoLibre.setTiempoSalida(tiempo + TAsap);
+                            }
                         }else{
-                            //si la gente encolada en SAP es mucha, no dejarlo pasar.
+                            NSmdsti++;
+                            NTMdsti++;
+                            stllMdsti = stllMdsti + tiempo;
 
+                            if(NSmdsti <= cantPuestosMdsti){
+                                PuestoMdsti puestoLibre = puestosMdsti.Find(i => i.getTiempoSalida() == HV);
+                                double TAmdsti = new Fdp().CalcularFdpTAMDSTI(30,3000);
+                                puestoLibre.setTiempoSalida(tiempo + TAmdsti);
+                            }
                         }
-
                     }else{
-                        NSmdsti++;
-
-                        if(NSmdsti <= cantPuestosMdsti){
-                            PuestoMdsti puestoLibre = puestosMdsti.Find(i => i.getTiempoSalida() == HV);
-                            //double TAmdsti = new Fdp().CalcularFdpTAMdsti(,);
-                            //puestoLibre.setTiempoSalida(tiempo + TAmdsti);
-                        }else{
-                            //si la gente encolada en MDSTI es mucha, no dejarlo pasar.
-
-                        }
+                        //se arrepiente
+                        cantArrep++;
                     }
-    
+        
 
                 }else if(menorTPSMdsti <= menorTPSSap){
                     //Salida de puesto MDSTI
                     tiempo = menorTPSMdsti;
                     NSmdsti--;
+                    stsMdsti = stsMdsti + tiempo;
 
                     if(NSmdsti >= cantPuestosMdsti){
                         //double TAMdsti = new Fdp().CalcularFdpTAMdsti(,);
@@ -146,6 +149,7 @@ namespace Simulación
                     //Salida de puesto SAP
                     tiempo = menorTPSSap;
                     NSsap--;
+                    stsSap = stsSap + tiempo;
 
                     if(NSsap >= cantPuestosSap){
                         //double TAsap = new Fdp().CalcularFdpTASap(,);

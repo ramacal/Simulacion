@@ -28,6 +28,36 @@ namespace Simulación
                     ia = 1;
           }
             return x1;
+        }
+
+        public double CalcularFdpTAMDSTI(double a, double b)
+        {
+            int ia = -1;
+            while (ia == -1)
+            {
+                r1 = new Random().NextDouble();
+                r2 = new Random().NextDouble();
+                x1 = (b - a) * r1 + a;
+                y1 = geometrica(0, 0.9957, 0.0043) * r2;
+                if (geometrica(x1, 0.9957, 0.0043) <= y1)
+                    ia = 1;
+            }
+            return x1;
+        }
+
+        public double CalcularFdpTASAP(double a, double b)
+        {
+            int ia = -1;
+            while (ia == -1)
+            {
+                r1 = new Random().NextDouble();
+                r2 = new Random().NextDouble();
+                x1 = (b - a) * r1 + a;
+                y1 = geometrica(0, 0.99567, 0.00433) * r2;
+                if (geometrica(x1, 0.99567, 0.00433) <= y1)
+                    ia = 1;
+            }
+            return x1;
         }    
     }
      
