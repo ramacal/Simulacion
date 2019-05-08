@@ -1,11 +1,11 @@
 namespace Simulación{
     class PuestoSap{
 
-        public const int HV = 999999;
+
         private double tiempoSalida;
 
-        public PuestoSap(){
-            this.tiempoSalida = HV; //El puesto arranca libre
+        public PuestoSap(double t){
+            this.tiempoSalida = t; //El puesto arranca libre
         }
 
         public double getTiempoSalida(){

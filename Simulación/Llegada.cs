@@ -2,8 +2,8 @@ namespace Simulación{
     class Llegada{
         private double tiempoLlegada;
 
-        public Llegada(){
-            this.tiempoLlegada = 0;
+        public Llegada(double t){
+            this.tiempoLlegada = t;
         }
         public double getTiempoLlegada(){
             return this.tiempoLlegada;

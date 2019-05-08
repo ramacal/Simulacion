@@ -16,7 +16,10 @@ namespace Simulación
             int cantPuestosSap;
             int cantPuestosMdsti;
             double tiempo = 0;
-            double tiempoFinal = 3600;
+            double tiempoFinal = 3000;
+            int NSsap = 0;
+            int NSmdsti = 0; 
+            double HV = 999999;
 
             List<PuestoSap> puestosSap = new List<PuestoSap>(); 
             List<PuestoMdsti> puestosMdsti = new List<PuestoMdsti>();
@@ -26,11 +29,10 @@ namespace Simulación
             Console.WriteLine(("").PadRight(20, '-'));
             //FIN - INICIALIZACION VARIABLES
 
-
             //INICIO - DECLARACION DE FUNCIONES
 
             // FDP - Intervalo entre arribos
-            double fdpIA = new Fdp().CalcularFdpIA(0,1073);
+            //double fdpIA = new Fdp().CalcularFdpIA(0,1073);
             
             // FDP - Intervalo entre arribos
 
@@ -70,36 +72,87 @@ namespace Simulación
 
             for(int i=0;i<cantPuestosMdsti;i++){
                 //instancio N puestos MDSTI
-                puestosMdsti.Add(new PuestoMdsti());
+                puestosMdsti.Add(new PuestoMdsti(HV));
             }
             for(int i=0;i<cantPuestosSap;i++){
                 //instancio M puestos SAP
-                puestosSap.Add(new PuestoSap());
+                puestosSap.Add(new PuestoSap(HV));
             }
 
-            //Creo la primer llegada (el constructor de Llegada le setea por default el tiempo 0)
-            llegadas.Add(new Llegada());
+            //Creo la primer llegada
+            llegadas.Add(new Llegada(0));
 
             //INICIO - LOGICA SIMULACION
             while(tiempo <= tiempoFinal){
-                double menorTPSMdsti = puestosMdsti.Aggregate((i1,i2) => i1.getTiempoSalida() < i2.getTiempoSalida() ? i1 : i2).getTiempoSalida();
-                double menorTPSSap = puestosSap.Aggregate((i1,i2) => i1.getTiempoSalida() < i2.getTiempoSalida() ? i1 : i2).getTiempoSalida();
-                double tpll = llegadas.Aggregate((i1,i2) => i1.getTiempoLlegada() < i2.getTiempoLlegada() ? i1 : i2).getTiempoLlegada();
+                PuestoMdsti puestoMdstiConMenorSalida = puestosMdsti.Aggregate((i1,i2) => i1.getTiempoSalida() < i2.getTiempoSalida() ? i1 : i2);
+                double menorTPSMdsti = puestoMdstiConMenorSalida.getTiempoSalida();
+                PuestoSap puestoSapConMenorSalida = puestosSap.Aggregate((i1,i2) => i1.getTiempoSalida() < i2.getTiempoSalida() ? i1 : i2);
+                double menorTPSSap = puestoSapConMenorSalida.getTiempoSalida();
+                Llegada llegadaConMenorTiempo = llegadas.Aggregate((i1,i2) => i1.getTiempoLlegada() < i2.getTiempoLlegada() ? i1 : i2);
+                double tpll = llegadaConMenorTiempo.getTiempoLlegada();
 
                 if(tpll <= menorTPSMdsti && tpll <= menorTPSSap){
                     //Llegada
                     tiempo = tpll;
+
+                    double IA = new Fdp().CalcularFdpIA(0,1073);
+                    tpll = tiempo + IA;
+                    llegadas.Add(new Llegada(tpll));
+                    llegadas.Remove(llegadaConMenorTiempo);
+
+                    Random random = new Random();
+                    double r = random.NextDouble();
+
+                    if(r <= 0.1){
+                        NSsap++;
+
+                        if(NSsap <= cantPuestosSap){
+                            PuestoSap puestoLibre = puestosSap.Find(i => i.getTiempoSalida() == HV);
+                            //double TAsap = new Fdp().CalcularFdpTASap(31,966);
+                            //puestoLibre.setTiempoSalida(tiempo + TAsap);
+                        }else{
+                            //si la gente encolada en SAP es mucha, no dejarlo pasar.
+
+                        }
+
+                    }else{
+                        NSmdsti++;
+
+                        if(NSmdsti <= cantPuestosMdsti){
+                            PuestoMdsti puestoLibre = puestosMdsti.Find(i => i.getTiempoSalida() == HV);
+                            //double TAmdsti = new Fdp().CalcularFdpTAMdsti(,);
+                            //puestoLibre.setTiempoSalida(tiempo + TAmdsti);
+                        }else{
+                            //si la gente encolada en MDSTI es mucha, no dejarlo pasar.
+
+                        }
+                    }
     
 
                 }else if(menorTPSMdsti <= menorTPSSap){
                     //Salida de puesto MDSTI
                     tiempo = menorTPSMdsti;
+                    NSmdsti--;
+
+                    if(NSmdsti >= cantPuestosMdsti){
+                        //double TAMdsti = new Fdp().CalcularFdpTAMdsti(,);
+                        //puestoMdstiConMenorSalida.setTiempoSalida(tiempo + TAMdsti);
+                    }else{
+                        puestoMdstiConMenorSalida.setTiempoSalida(HV);
+                    }
 
 
                 }else{
                     //Salida de puesto SAP
                     tiempo = menorTPSSap;
+                    NSsap--;
 
+                    if(NSsap >= cantPuestosSap){
+                        //double TAsap = new Fdp().CalcularFdpTASap(,);
+                        //puestoSapConMenorSalida.setTiempoSalida(tiempo + TAsap);
+                    }else{
+                        puestoSapConMenorSalida.setTiempoSalida(HV);
+                    }
 
                 }
 
