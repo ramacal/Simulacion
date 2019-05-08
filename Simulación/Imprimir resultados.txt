@@ -1,0 +1,21 @@
+
+PPSSAP: Promedio de permanencia en el sistema SAP.
+PPSSAP = (STSSAP - SLLSAP)/NTSAP
+PPSMDSTI: Promedio de permanencia en el sistema SAP.
+PPSSAP = (STSMDSTI - SLLMDSTI)/NTMDSTI
+
+PECSAP: Promedio de espera en cola SAP.
+PECSAP =  (STSSAP - SLLSAP - STASAP)/NTSAP
+PECMDSTI: Promedio de espera en cola MDSTI.
+PECMDSTI =  (STSMDSTI - SLLMDSTI - STAMDSTI)/NTSAP
+
+
+PTOSAP (I): Porcentaje de tiempo ocioso de cada puesto de atención SAP.
+PTOSAP(i) = (STOSAP(i)*100)/T
+PTOMDSTI (I): Porcentaje de tiempo ocioso de cada puesto de atención MDSTI.
+PTOMDSTI(i) = (STOMDSTI(i)*100)/T
+
+PASAP: Porcentaje de personas arrepentidas respecto del total de personas que ingresaron a atenderse por SAP.
+PASAP : SPASAP *100/(NTSAP+SPASAP) 
+PAMDSTI:  Porcentaje de personas arrepentidas respecto del total de personas que ingresaron a atenderse por MDSTI.
+PAMDSTI : SPAMDSTI *100/(NTMDSTI+SPAMDSTI) 
