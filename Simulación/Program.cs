@@ -183,19 +183,61 @@ namespace Simulación
             //FIN - LOGICA SIMULACION
 
             //INICIO - CALCULO RESULTADOS
+            /*
+                staSap: Sumatoria Tiempo Atención SAP.
+                staMdsti: Sumatoria Tiempo Atención MDSTI.
+                stoSap: Sumatoria Tiempo Ocioso SAP. 
+                stoMdsti: Sumatoria Tiempo Ocioso MDSTI.
+                stsSap: Sumatoria de salidas SAP.
+                stsMdsti: Sumatoria de salidas MDSTI.
+             */
 
-            //PPS1, PPS2, PEC1, PEC2, etc
+            //PPSSAP y PPSMDSTI: Promedio de permanencia en el sistema SAP/MDSTI
+            double ppsSap = (stsSap - stllSap) / NTSap;
+            double ppsMdsti = (stsMdsti - stllMdsti) / NTMdsti;
 
+            //PECSAP y PECMDSTI: Promedio de espera en cola SAP/MDSTI
+            double pecSap = (stsSap - stllSap - staSap) / NTSap;
+            double pecMdsti = (stsMdsti - stllMdsti - staMdsti) / NTMdsti;
+
+            //PTOSAP y PTOMDSTI: Porcentaje de tiempo ocioso de cada puesto de atención SAP/MDSTI
+            double stoSap = puestosMdsti.Sum(x=> x.getSumatoriaTiempoOcioso());
+            double stoMdsti = puestosMdsti.Sum(x => x.getSumatoriaTiempoOcioso());
+
+            double ptoSap = (stoSap * 100)/tiempo;
+            double ptoMdsti = (stoMdsti * 100)/tiempo;
+            
+            //PASAP y PAMDSTI: Porcentaje Arrepentidos respecto del total de personas que ingresaron a atenderse por SAP/MDSTI
+            double pa = cantArrep * 100 / (NTSap + cantArrep);
             //FIN - CALCULO RESULTADOS
 
             //INICIO - IMPRESION RESULTADOS
+            Console.WriteLine(("").PadRight(40, '-'));
+            Console.WriteLine("Impresión de Resultados");
+            Console.WriteLine(("").PadRight(23, '-') + "\n");
+            Console.WriteLine("Promedio de permanencia en el sistema SAP/MDSTI");
+            Console.WriteLine(("").PadRight(47, '-'));
+            Console.WriteLine("PPSSAP: " + ppsSap);
+            Console.WriteLine("PPSMDSTI: " + ppsMdsti + "\n");
+            Console.WriteLine("Promedio de espera en cola SAP/MDSTI");
+            Console.WriteLine(("").PadRight(47, '-'));
+            Console.WriteLine("PECSAP: " + ppsSap);
+            Console.WriteLine("PECMDSTI: " + ppsMdsti + "\n");
+            Console.WriteLine("Promedio de espera en cola SAP/MDSTI");
+            Console.WriteLine(("").PadRight(47, '-'));
+            Console.WriteLine("PTOSAP: " + ptoSap);
+            Console.WriteLine("PTOMDSTI: " + ptoMdsti + "\n");
+            Console.WriteLine("Porcentaje Arrepentidos respecto del total de personas que ingresaron a atenderse por SAP/MDSTI");
+            Console.WriteLine(("").PadRight(47, '-'));
+            Console.WriteLine("PA: " + pa + "\n");
             //FIN - RESULTADOS
-            
-            Console.WriteLine("Fin");
-            Escribir.Close();
-            Console.ReadLine();
-            
 
-        }
-    }
+            Console.WriteLine("Fin");
+Escribir.Close();
+Console.ReadLine();
+
+
 }
+}
+}
+ 
