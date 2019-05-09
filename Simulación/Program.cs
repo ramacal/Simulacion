@@ -82,13 +82,19 @@ namespace Simulación
             llegadas.Add(new Llegada(0));
 
             //INICIO - LOGICA SIMULACION
-            while(tiempo < tiempoFinal){
+            while(tiempo < tiempoFinal || NSsap > 0 || NSmdsti > 0){
                 PuestoMdsti puestoMdstiConMenorSalida = puestosMdsti.Aggregate((i1,i2) => i1.getTiempoSalida() < i2.getTiempoSalida() ? i1 : i2);
                 double menorTPSMdsti = puestoMdstiConMenorSalida.getTiempoSalida();
                 PuestoSap puestoSapConMenorSalida = puestosSap.Aggregate((i1,i2) => i1.getTiempoSalida() < i2.getTiempoSalida() ? i1 : i2);
                 double menorTPSSap = puestoSapConMenorSalida.getTiempoSalida();
                 Llegada llegadaConMenorTiempo = llegadas.Aggregate((i1,i2) => i1.getTiempoLlegada() < i2.getTiempoLlegada() ? i1 : i2);
                 double tpll = llegadaConMenorTiempo.getTiempoLlegada();
+
+                if(tiempo >= tiempoFinal){
+                    //Vaciamiento
+                    Console.Write("Salida por vaciamiento: \n");
+                    tpll = HV;
+                }
 
                 if(tpll <= menorTPSMdsti && tpll <= menorTPSSap){
                     //Llegada
