@@ -201,7 +201,7 @@ namespace Simulación
             double pecMdsti = (stsMdsti - stllMdsti - staMdsti) / NTMdsti;
 
             //PTOSAP y PTOMDSTI: Porcentaje de tiempo ocioso de cada puesto de atención SAP/MDSTI
-            double stoSap = puestosMdsti.Sum(x=> x.getSumatoriaTiempoOcioso());
+            double stoSap = puestosSap.Sum(x=> x.getSumatoriaTiempoOcioso());
             double stoMdsti = puestosMdsti.Sum(x => x.getSumatoriaTiempoOcioso());
 
             double ptoSap = (stoSap * 100)/tiempo;
@@ -221,9 +221,9 @@ namespace Simulación
             Console.WriteLine("PPSMDSTI: " + ppsMdsti + "\n");
             Console.WriteLine("Promedio de espera en cola SAP/MDSTI");
             Console.WriteLine(("").PadRight(47, '-'));
-            Console.WriteLine("PECSAP: " + ppsSap);
-            Console.WriteLine("PECMDSTI: " + ppsMdsti + "\n");
-            Console.WriteLine("Promedio de espera en cola SAP/MDSTI");
+            Console.WriteLine("PECSAP: " + pecSap);
+            Console.WriteLine("PECMDSTI: " + pecMdsti + "\n");
+            Console.WriteLine("Promedio de Tiempo Ocioso en cola SAP/MDSTI");
             Console.WriteLine(("").PadRight(47, '-'));
             Console.WriteLine("PTOSAP: " + ptoSap);
             Console.WriteLine("PTOMDSTI: " + ptoMdsti + "\n");
