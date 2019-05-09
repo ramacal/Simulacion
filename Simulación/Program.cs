@@ -204,6 +204,13 @@ namespace Simulación
 
             //PECSAP y PECMDSTI: Promedio de espera en cola SAP/MDSTI
             double pecSap = (stsSap - stllSap - staSap) / NTSap;
+            Console.WriteLine("stssap: "+stsSap+"\n");
+            Console.WriteLine("stllsap: "+stllSap+"\n");
+            Console.WriteLine("stasap: "+staSap+"\n");
+            Console.WriteLine("NTSap: "+NTSap+"\n");
+            double resta = stsSap - stllSap;
+            Console.WriteLine("stssap - stllsap: "+resta+"\n");
+
             double pecMdsti = (stsMdsti - stllMdsti - staMdsti) / NTMdsti;
 
             //PTOSAP y PTOMDSTI: Porcentaje de tiempo ocioso de cada puesto de atención SAP/MDSTI
