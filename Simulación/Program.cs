@@ -16,10 +16,10 @@ namespace Simulación
             int cantPuestosSap;
             int cantPuestosMdsti;
             double tiempo = 0;
-            double tiempoFinal = 3600 * 8;
+            double tiempoFinal = 3600 * 8 * 5 * 20;
             int NSsap = 0;
             int NSmdsti = 0; 
-            double HV = 999999;
+            double HV = int.MaxValue;
             double stllMdsti = 0;
             double stllSap = 0;
             double stsMdsti = 0;
@@ -82,13 +82,19 @@ namespace Simulación
             llegadas.Add(new Llegada(0));
 
             //INICIO - LOGICA SIMULACION
-            while(tiempo < tiempoFinal){
+            while(tiempo < tiempoFinal || NSsap > 0 || NSmdsti > 0){
                 PuestoMdsti puestoMdstiConMenorSalida = puestosMdsti.Aggregate((i1,i2) => i1.getTiempoSalida() < i2.getTiempoSalida() ? i1 : i2);
                 double menorTPSMdsti = puestoMdstiConMenorSalida.getTiempoSalida();
                 PuestoSap puestoSapConMenorSalida = puestosSap.Aggregate((i1,i2) => i1.getTiempoSalida() < i2.getTiempoSalida() ? i1 : i2);
                 double menorTPSSap = puestoSapConMenorSalida.getTiempoSalida();
                 Llegada llegadaConMenorTiempo = llegadas.Aggregate((i1,i2) => i1.getTiempoLlegada() < i2.getTiempoLlegada() ? i1 : i2);
                 double tpll = llegadaConMenorTiempo.getTiempoLlegada();
+
+                if(tiempo >= tiempoFinal){
+                    //Vaciamiento
+                    Console.Write("Salida por vaciamiento: \n");
+                    tpll = HV;
+                }
 
                 if(tpll <= menorTPSMdsti && tpll <= menorTPSSap){
                     //Llegada
@@ -197,11 +203,11 @@ namespace Simulación
             double ppsMdsti = (stsMdsti - stllMdsti) / NTMdsti;
 
             //PECSAP y PECMDSTI: Promedio de espera en cola SAP/MDSTI
-            double pecSap = (stsSap - stllSap - staSap) / NTSap;
-            double pecMdsti = (stsMdsti - stllMdsti - staMdsti) / NTMdsti;
+            double pecSap = (Math.Round(stsSap,6) - Math.Round(stllSap,6) - Math.Round(staSap,6)) / NTSap;
+            double pecMdsti = (Math.Round(stsMdsti,6) - Math.Round(stllMdsti,6) - Math.Round(staMdsti,6)) / NTMdsti;
 
             //PTOSAP y PTOMDSTI: Porcentaje de tiempo ocioso de cada puesto de atención SAP/MDSTI
-            double stoSap = puestosMdsti.Sum(x=> x.getSumatoriaTiempoOcioso());
+            double stoSap = puestosSap.Sum(x=> x.getSumatoriaTiempoOcioso());
             double stoMdsti = puestosMdsti.Sum(x => x.getSumatoriaTiempoOcioso());
 
             double ptoSap = (stoSap * 100)/tiempo;
@@ -221,15 +227,17 @@ namespace Simulación
             Console.WriteLine("PPSMDSTI: " + ppsMdsti + "\n");
             Console.WriteLine("Promedio de espera en cola SAP/MDSTI");
             Console.WriteLine(("").PadRight(47, '-'));
-            Console.WriteLine("PECSAP: " + ppsSap);
-            Console.WriteLine("PECMDSTI: " + ppsMdsti + "\n");
-            Console.WriteLine("Promedio de espera en cola SAP/MDSTI");
+            Console.WriteLine("PECSAP: " + pecSap);
+            Console.WriteLine("PECMDSTI: " + pecMdsti + "\n");
+            Console.WriteLine("Promedio de Tiempo Ocioso en cola SAP/MDSTI");
             Console.WriteLine(("").PadRight(47, '-'));
             Console.WriteLine("PTOSAP: " + ptoSap);
             Console.WriteLine("PTOMDSTI: " + ptoMdsti + "\n");
             Console.WriteLine("Porcentaje Arrepentidos respecto del total de personas que ingresaron a atenderse por SAP/MDSTI");
             Console.WriteLine(("").PadRight(47, '-'));
             Console.WriteLine("PA: " + pa + "\n");
+            Console.WriteLine("NTSap: " + NTSap + "\n");
+            Console.WriteLine("NTMdsti: " + NTMdsti + "\n");
             //FIN - RESULTADOS
 
             Console.WriteLine("Fin");
