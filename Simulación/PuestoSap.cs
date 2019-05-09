@@ -37,5 +37,6 @@ namespace Simulación{
         public void sumarTiempoOcioso(double t){
             this.sumatoriaTiempoOcioso = this.sumatoriaTiempoOcioso + t;
         }
+        
     }    
 }
