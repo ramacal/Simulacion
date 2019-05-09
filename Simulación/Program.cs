@@ -16,7 +16,7 @@ namespace Simulación
             int cantPuestosSap;
             int cantPuestosMdsti;
             double tiempo = 0;
-            double tiempoFinal = 3600 * 8 * 5 * 20;
+            double tiempoFinal = 3600 * 8 * 5 * 4 * 3;
             int NSsap = 0;
             int NSmdsti = 0; 
             double HV = int.MaxValue;
@@ -206,15 +206,12 @@ namespace Simulación
             double pecSap = (Math.Round(stsSap,6) - Math.Round(stllSap,6) - Math.Round(staSap,6)) / NTSap;
             double pecMdsti = (Math.Round(stsMdsti,6) - Math.Round(stllMdsti,6) - Math.Round(staMdsti,6)) / NTMdsti;
 
-            //PTOSAP y PTOMDSTI: Porcentaje de tiempo ocioso de cada puesto de atención SAP/MDSTI
-            double stoSap = puestosSap.Sum(x=> x.getSumatoriaTiempoOcioso());
-            double stoMdsti = puestosMdsti.Sum(x => x.getSumatoriaTiempoOcioso());
-
-            double ptoSap = (stoSap * 100)/tiempo;
-            double ptoMdsti = (stoMdsti * 100)/tiempo;
+            
+            //double stoSap = puestosSap.Sum(x=> x.getSumatoriaTiempoOcioso());
+            //double stoMdsti = puestosMdsti.Sum(x => x.getSumatoriaTiempoOcioso());
             
             //PASAP y PAMDSTI: Porcentaje Arrepentidos respecto del total de personas que ingresaron a atenderse por SAP/MDSTI
-            double pa = cantArrep * 100 / (NTSap + cantArrep);
+            double pa = cantArrep * 100 / (NTSap + cantArrep + NTMdsti);
             //FIN - CALCULO RESULTADOS
 
             //INICIO - IMPRESION RESULTADOS
@@ -231,13 +228,29 @@ namespace Simulación
             Console.WriteLine("PECMDSTI: " + pecMdsti + "\n");
             Console.WriteLine("Promedio de Tiempo Ocioso en cola SAP/MDSTI");
             Console.WriteLine(("").PadRight(47, '-'));
-            Console.WriteLine("PTOSAP: " + ptoSap);
-            Console.WriteLine("PTOMDSTI: " + ptoMdsti + "\n");
+            //Console.WriteLine("PTOSAP: " + ptoSap);
+            //Console.WriteLine("PTOMDSTI: " + ptoMdsti + "\n");
             Console.WriteLine("Porcentaje Arrepentidos respecto del total de personas que ingresaron a atenderse por SAP/MDSTI");
             Console.WriteLine(("").PadRight(47, '-'));
             Console.WriteLine("PA: " + pa + "\n");
+            Console.WriteLine("Cantidad arrepentidos: " + cantArrep + "\n");
             Console.WriteLine("NTSap: " + NTSap + "\n");
             Console.WriteLine("NTMdsti: " + NTMdsti + "\n");
+
+            //PTOSAP y PTOMDSTI: Porcentaje de tiempo ocioso de cada puesto de atención SAP y MDSTI
+            int j = 1;
+            double pto = 0;
+            foreach (PuestoSap pSap in puestosSap){
+                pto = (pSap.getSumatoriaTiempoOcioso() * 100)/tiempo;
+                Console.WriteLine("PTOsap("+j+"): "+pto+"\n");
+                j++;
+            }
+            j = 1;
+            foreach (PuestoMdsti pMdsti in puestosMdsti){
+                pto = (pMdsti.getSumatoriaTiempoOcioso() * 100)/tiempo;
+                Console.WriteLine("PTOmdsti("+j+"): "+pto+"\n");
+                j++;
+            }
             //FIN - RESULTADOS
 
             Console.WriteLine("Fin");
